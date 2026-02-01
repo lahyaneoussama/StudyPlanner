@@ -2,16 +2,14 @@
 import { User, Subject, Task, StudySession } from './types.ts';
 
 /**
- *  ⚠️ ملاحظة هامة: 
- *  بعد رفع السيرفر على Koyeb، سيقوم بإعطائك رابطاً (مثلاً: https://app-xyz.koyeb.app)
- *  قم بوضعه هنا بدلاً من الرابط التجريبي أدناه.
+ * 🔗 رابط الـ Backend الخاص بك على Koyeb
  */
-const KOYEB_URL = 'https://study-planner-api-yourname.koyeb.app'; 
+const KOYEB_URL = 'https://rough-bride-oussamaln-07fee82b.koyeb.app'; 
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    // إذا كنت تعمل محلياً (Localhost)
+    // التحقق مما إذا كان التطبيق يعمل محلياً أو على الإنترنت
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return `http://localhost:3000/api`;
     }
@@ -21,10 +19,13 @@ const getBaseUrl = () => {
 
 const BASE_URL = getBaseUrl();
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-});
+const getHeaders = () => {
+  const token = localStorage.getItem('auth_token');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': token ? `Bearer ${token}` : ''
+  };
+};
 
 const handleResponse = async (res: Response) => {
   const text = await res.text();
@@ -34,7 +35,10 @@ const handleResponse = async (res: Response) => {
   } catch (e) {
     data = { error: 'استجابة غير صالحة من السيرفر' };
   }
-  if (!res.ok) throw new Error(data.error || `خطأ: ${res.status}`);
+  
+  if (!res.ok) {
+    throw new Error(data.error || `خطأ في الاتصال: ${res.status}`);
+  }
   return data;
 };
 
@@ -47,6 +51,7 @@ export const ApiService = {
     });
     return await handleResponse(res);
   },
+  
   register: async (fullName: string, email: string, pass: string) => {
     const res = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
@@ -55,6 +60,7 @@ export const ApiService = {
     });
     return await handleResponse(res);
   },
+  
   updateProfile: async (user: User) => {
     const res = await fetch(`${BASE_URL}/users/profile`, {
       method: 'PUT',
@@ -63,10 +69,12 @@ export const ApiService = {
     });
     return await handleResponse(res);
   },
+  
   getSubjects: async (uid: string) => {
     const res = await fetch(`${BASE_URL}/subjects`, { headers: getHeaders() });
     return await handleResponse(res);
   },
+  
   saveSubject: async (s: Subject, uid: string) => {
     const res = await fetch(`${BASE_URL}/subjects`, {
       method: 'POST',
@@ -75,55 +83,84 @@ export const ApiService = {
     });
     return await handleResponse(res);
   },
+  
   deleteSubject: async (id: string) => {
-    const res = await fetch(`${BASE_URL}/subjects/${id}`, { method: 'DELETE', headers: getHeaders() });
+    const res = await fetch(`${BASE_URL}/subjects/${id}`, { 
+      method: 'DELETE', 
+      headers: getHeaders() 
+    });
     return await handleResponse(res);
   },
+  
   getTasks: async (uid: string) => {
     const res = await fetch(`${BASE_URL}/tasks`, { headers: getHeaders() });
     const data = await handleResponse(res);
     return data.map((t: any) => ({
-      id: t.id, title: t.title, subjectId: t.subject_id,
+      id: t.id, 
+      title: t.title, 
+      subjectId: t.subject_id,
       dueDate: t.due_date ? t.due_date.split('T')[0] : '',
       completed: !!t.completed
     }));
   },
+  
   saveTask: async (t: Task, uid: string) => {
     const res = await fetch(`${BASE_URL}/tasks`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({
-        id: t.id, subject_id: t.subjectId, title: t.title,
-        due_date: t.dueDate, completed: t.completed
+        id: t.id, 
+        subject_id: t.subjectId, 
+        title: t.title,
+        due_date: t.dueDate, 
+        completed: t.completed
       })
     });
     return await handleResponse(res);
   },
+  
   deleteTask: async (id: string) => {
-    const res = await fetch(`${BASE_URL}/tasks/${id}`, { method: 'DELETE', headers: getHeaders() });
+    const res = await fetch(`${BASE_URL}/tasks/${id}`, { 
+      method: 'DELETE', 
+      headers: getHeaders() 
+    });
     return await handleResponse(res);
   },
+  
   getSessions: async (uid: string) => {
     const res = await fetch(`${BASE_URL}/sessions`, { headers: getHeaders() });
     const data = await handleResponse(res);
     return data.map((s: any) => ({
-      id: s.id, subjectId: s.subject_id, day: s.day_name,
-      startTime: s.start_time, duration: s.duration, goal: s.goal
+      id: s.id, 
+      subjectId: s.subject_id, 
+      day: s.day_name,
+      startTime: s.start_time, 
+      duration: s.duration, 
+      goal: s.goal
     }));
   },
+  
   saveSession: async (s: StudySession, uid: string) => {
     const res = await fetch(`${BASE_URL}/sessions`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({
-        id: s.id, subject_id: s.subjectId, day_name: s.day,
-        start_time: s.startTime, duration: s.duration, goal: s.goal
+        id: s.id, 
+        subject_id: s.subjectId, 
+        day_name: s.day,
+        start_time: s.startTime, 
+        duration: s.duration, 
+        goal: s.goal
       })
     });
     return await handleResponse(res);
   },
+  
   deleteSession: async (id: string) => {
-    const res = await fetch(`${BASE_URL}/sessions/${id}`, { method: 'DELETE', headers: getHeaders() });
+    const res = await fetch(`${BASE_URL}/sessions/${id}`, { 
+      method: 'DELETE', 
+      headers: getHeaders() 
+    });
     return await handleResponse(res);
   }
 };
