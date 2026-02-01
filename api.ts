@@ -1,19 +1,22 @@
 
 import { User, Subject, Task, StudySession } from './types.ts';
 
-// بعد أن ترفع السيرفر على Render، سيقوم Render بإعطائك رابطاً (URL)
-// ضعه هنا بدلاً من 'your-backend-url'
-const PRODUCTION_API_URL = 'https://study-planner-backend-xyz.onrender.com/api'; 
+/**
+ *  ⚠️ ملاحظة هامة: 
+ *  بعد رفع السيرفر على Koyeb، سيقوم بإعطائك رابطاً (مثلاً: https://app-xyz.koyeb.app)
+ *  قم بوضعه هنا بدلاً من الرابط التجريبي أدناه.
+ */
+const KOYEB_URL = 'https://study-planner-api-yourname.koyeb.app'; 
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    // إذا كنت تجرب على المتصفح محلياً استخدم localhost
+    // إذا كنت تعمل محلياً (Localhost)
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return `http://localhost:3000/api`;
     }
   }
-  return PRODUCTION_API_URL;
+  return `${KOYEB_URL}/api`;
 };
 
 const BASE_URL = getBaseUrl();
@@ -29,7 +32,7 @@ const handleResponse = async (res: Response) => {
   try {
     data = text ? JSON.parse(text) : {};
   } catch (e) {
-    data = { error: 'استجابة غير صالحة' };
+    data = { error: 'استجابة غير صالحة من السيرفر' };
   }
   if (!res.ok) throw new Error(data.error || `خطأ: ${res.status}`);
   return data;
