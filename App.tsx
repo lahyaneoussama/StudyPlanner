@@ -24,17 +24,24 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [loading, setLoading] = useState(false);
 
-  // التحقق من الجلسة عند بدء التطبيق
   useEffect(() => {
+    const loader = document.getElementById('loading-screen');
+    if (loader) loader.style.display = 'none';
+
     const token = localStorage.getItem('auth_token');
     const savedUser = localStorage.getItem('user');
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
     
     if (token && savedUser) {
-      const u = JSON.parse(savedUser);
-      setUser(u);
-      setIsLoggedIn(true);
-      fetchData(u.id);
+      try {
+        const u = JSON.parse(savedUser);
+        setUser(u);
+        setIsLoggedIn(true);
+        fetchData(u.id);
+      } catch (e) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('auth_token');
+      }
     }
     if (savedTheme) setTheme(savedTheme);
   }, []);
@@ -51,24 +58,25 @@ const App: React.FC = () => {
       setTasks(tks);
       setSessions(sess);
 
-      // Generate AI Tip using Gemini
-      const savedUser = localStorage.getItem('user');
-      if (savedUser) {
-        const u = JSON.parse(savedUser) as User;
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = (process.env as any).API_KEY;
+      if (apiKey) {
+        const ai = new GoogleGenAI({ apiKey });
         const pendingTasks = tks.filter(t => !t.completed).length;
         
-        const response = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: `أنت مساعد دراسة ذكي وودود. قدم نصيحة دراسية واحدة قصيرة وملهمة باللغة العربية للطالب ${u.fullName} (مستواه: ${u.educationLevel}). لديه ${subs.length} مواد و ${pendingTasks} مهام متبقية اليوم. هدفه اليومي ${u.dailyStudyGoal} ساعات.`,
-        });
-        
-        if (response.text) {
-          setAiTip(response.text.trim());
+        try {
+          const response = await ai.models.generateContent({
+            model: 'gemini-3-flash-preview',
+            contents: `أنت مساعد دراسة ذكي. قدم نصيحة دراسية واحدة قصيرة جداً وملهمة للطالب ${user?.fullName}. لديه ${subs.length} مواد و ${pendingTasks} مهام متبقية. أجب بالعربية فقط.`,
+          });
+          if (response.text) setAiTip(response.text.trim());
+        } catch (aiErr) {
+          setAiTip("ركز على إنجاز مهامك اليوم، فكل خطوة صغيرة تقربك من هدفك الكبير!");
         }
+      } else {
+        setAiTip("الدراسة بذكاء أفضل من الدراسة بجهد، نظم وقتك تنجح في حياتك!");
       }
     } catch (e) {
-      console.error("خطأ في جلب البيانات", e);
+      console.error("Data fetch error", e);
     } finally {
       setLoading(false);
     }
@@ -100,33 +108,33 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`flex flex-col h-full overflow-hidden max-w-md mx-auto shadow-2xl relative transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0F172A] text-white' : 'bg-[#F8FAFC] text-gray-900'}`}>
+    <div className={`flex flex-col h-full w-full overflow-hidden relative transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0F172A] text-white' : 'bg-[#F8FAFC] text-gray-900'}`}>
       {loading && (
-        <div className="absolute inset-0 z-[100] bg-white/50 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="absolute inset-0 z-[100] bg-white/60 dark:bg-black/60 backdrop-blur-md flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-xl"></div>
         </div>
       )}
 
-      <header className={`bg-gradient-to-r ${theme === 'dark' ? 'from-indigo-900 to-blue-900' : 'from-blue-700 to-blue-600'} text-white p-6 pt-12 pb-8 sticky top-0 z-30 shadow-lg safe-area-top rounded-b-[2.5rem]`}>
+      <header className={`bg-gradient-to-r ${theme === 'dark' ? 'from-indigo-900 to-blue-900' : 'from-blue-600 to-blue-500'} text-white p-6 pt-14 pb-8 sticky top-0 z-30 shadow-lg safe-area-top rounded-b-[3rem]`}>
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-black tracking-tighter">{AR.appName}</h1>
-            <p className="opacity-70 text-[10px] uppercase font-bold tracking-widest mt-0.5">Secure Cloud Database</p>
+            <p className="opacity-70 text-[10px] uppercase font-bold tracking-widest mt-0.5">رفيقك نحو النجاح</p>
           </div>
           <div className="flex items-center gap-3">
-             <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transition-transform active:scale-90">
+             <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transition-transform active:scale-90 shadow-lg">
                <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'}`}></i>
              </button>
              <div onClick={() => setCurrentView('profile')} className="w-11 h-11 rounded-2xl bg-white p-0.5 shadow-xl cursor-pointer active:scale-90 transition-transform">
                <div className="w-full h-full rounded-[0.9rem] bg-blue-100 flex items-center justify-center text-blue-700 font-black text-lg overflow-hidden">
-                 {user?.fullName.charAt(0)}
+                 {user?.fullName?.charAt(0) || 'م'}
                </div>
              </div>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 pb-32 no-scrollbar">
+      <main className="flex-1 overflow-y-auto p-5 pb-36 no-scrollbar">
         {(() => {
           switch (currentView) {
             case 'home': return <HomeView user={user} subjects={subjects} tasks={tasks} sessions={sessions} aiTip={aiTip} />;

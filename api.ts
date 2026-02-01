@@ -1,5 +1,5 @@
 
-import { User, Subject, Task, StudySession } from './types.ts';
+import { User, Subject, Task, StudySession } from './types';
 
 /**
  * 🔗 رابط الـ Backend الخاص بك على Koyeb
@@ -9,7 +9,6 @@ const KOYEB_URL = 'https://rough-bride-oussamaln-07fee82b.koyeb.app';
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    // التحقق مما إذا كان التطبيق يعمل محلياً أو على الإنترنت
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return `http://localhost:3000/api`;
     }
@@ -33,11 +32,11 @@ const handleResponse = async (res: Response) => {
   try {
     data = text ? JSON.parse(text) : {};
   } catch (e) {
-    data = { error: 'استجابة غير صالحة من السيرفر' };
+    data = { error: 'تعذر فهم استجابة السيرفر' };
   }
   
   if (!res.ok) {
-    throw new Error(data.error || `خطأ في الاتصال: ${res.status}`);
+    throw new Error(data.error || `خطأ: ${res.status}`);
   }
   return data;
 };
