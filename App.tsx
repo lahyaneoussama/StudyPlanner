@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppView, User, Subject, Task, StudySession } from './types';
 import { AR } from './constants';
@@ -26,7 +25,12 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const loader = document.getElementById('loading-screen');
-    if (loader) loader.style.display = 'none';
+    if (loader) {
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+      }, 1000);
+    }
 
     const token = localStorage.getItem('auth_token');
     const savedUser = localStorage.getItem('user');
@@ -66,14 +70,12 @@ const App: React.FC = () => {
         try {
           const response = await ai.models.generateContent({
             model: 'gemini-3-flash-preview',
-            contents: `أنت مساعد دراسة ذكي. قدم نصيحة دراسية واحدة قصيرة جداً وملهمة للطالب ${user?.fullName}. لديه ${subs.length} مواد و ${pendingTasks} مهام متبقية. أجب بالعربية فقط.`,
+            contents: `أنت مساعد دراسة ذكي ومحفز. قدم نصيحة دراسية واحدة قوية جداً وملهمة للطالب ${user?.fullName}. لديه ${subs.length} مواد و ${pendingTasks} مهام لم ينهها بعد. كن قصيراً وودوداً بالعربية.`,
           });
           if (response.text) setAiTip(response.text.trim());
         } catch (aiErr) {
-          setAiTip("ركز على إنجاز مهامك اليوم، فكل خطوة صغيرة تقربك من هدفك الكبير!");
+          setAiTip("كل دقيقة تقضيها في التعلم اليوم هي لبنة في بناء مستقبلك العظيم!");
         }
-      } else {
-        setAiTip("الدراسة بذكاء أفضل من الدراسة بجهد، نظم وقتك تنجح في حياتك!");
       }
     } catch (e) {
       console.error("Data fetch error", e);
@@ -108,25 +110,32 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`flex flex-col h-full w-full overflow-hidden relative transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0F172A] text-white' : 'bg-[#F8FAFC] text-gray-900'}`}>
+    <div className={`fixed inset-0 flex flex-col w-full h-full overflow-hidden transition-colors duration-700 ${theme === 'dark' ? 'bg-[#0f172a] text-white' : 'bg-[#fcfdff] text-gray-900'}`}>
       {loading && (
-        <div className="absolute inset-0 z-[100] bg-white/60 dark:bg-black/60 backdrop-blur-md flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-xl"></div>
+        <div className="absolute inset-0 z-[100] bg-white/20 dark:bg-black/20 backdrop-blur-xl flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin shadow-xl"></div>
         </div>
       )}
 
-      <header className={`bg-gradient-to-r ${theme === 'dark' ? 'from-indigo-900 to-blue-900' : 'from-blue-600 to-blue-500'} text-white p-6 pt-14 pb-8 sticky top-0 z-30 shadow-lg safe-area-top rounded-b-[3rem]`}>
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-black tracking-tighter">{AR.appName}</h1>
-            <p className="opacity-70 text-[10px] uppercase font-bold tracking-widest mt-0.5">رفيقك نحو النجاح</p>
-          </div>
+      {/* Modern Floating Header */}
+      <header className={`shrink-0 p-6 pt-12 pb-6 sticky top-0 z-40 safe-area-top`}>
+        <div className={`flex justify-between items-center p-4 rounded-[2rem] border backdrop-blur-xl transition-all duration-500 ${theme === 'dark' ? 'bg-slate-800/40 border-slate-700/50 shadow-2xl shadow-black/20' : 'bg-white/60 border-white/50 shadow-xl shadow-gray-200/50'}`}>
           <div className="flex items-center gap-3">
-             <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transition-transform active:scale-90 shadow-lg">
-               <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'}`}></i>
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-white shadow-lg">
+              <i className="fas fa-graduation-cap text-lg"></i>
+            </div>
+            <div>
+              <h1 className="text-sm font-black tracking-tighter leading-none">{AR.appName}</h1>
+              <span className="text-[8px] font-black opacity-40 uppercase tracking-[0.2em]">{currentView} mode</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+             <button onClick={toggleTheme} className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${theme === 'dark' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-gray-100 text-gray-500'}`}>
+               <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-sm`}></i>
              </button>
-             <div onClick={() => setCurrentView('profile')} className="w-11 h-11 rounded-2xl bg-white p-0.5 shadow-xl cursor-pointer active:scale-90 transition-transform">
-               <div className="w-full h-full rounded-[0.9rem] bg-blue-100 flex items-center justify-center text-blue-700 font-black text-lg overflow-hidden">
+             <div onClick={() => setCurrentView('profile')} className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 p-[2px] shadow-lg active:scale-90 transition-transform cursor-pointer">
+               <div className="w-full h-full rounded-[0.9rem] bg-white dark:bg-slate-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black text-xs">
                  {user?.fullName?.charAt(0) || 'م'}
                </div>
              </div>
@@ -134,7 +143,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-5 pb-36 no-scrollbar">
+      <main className="flex-1 overflow-y-auto no-scrollbar p-6 pb-40">
         {(() => {
           switch (currentView) {
             case 'home': return <HomeView user={user} subjects={subjects} tasks={tasks} sessions={sessions} aiTip={aiTip} />;

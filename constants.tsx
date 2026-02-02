@@ -1,4 +1,3 @@
-
 export const AR = {
   appName: 'مخطط الدراسة',
   home: 'الرئيسية',
@@ -45,10 +44,17 @@ export const AR = {
   primarySchool: 'ابتدائي',
 };
 
+// ألوان عصرية (Vibrant & Deep)
 export const SUBJECT_COLORS = [
-  '#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4'
+  '#6366f1', // Indigo
+  '#ec4899', // Pink
+  '#14b8a6', // Teal
+  '#f59e0b', // Amber
+  '#8b5cf6', // Violet
+  '#ef4444', // Red
+  '#3b82f6'  // Blue
 ];
 
 export const ICONS = [
-  'fa-book', 'fa-calculator', 'fa-flask', 'fa-globe', 'fa-laptop-code', 'fa-palette', 'fa-music'
+  'fa-book-bookmark', 'fa-calculator', 'fa-microscope', 'fa-earth-africa', 'fa-code', 'fa-palette', 'fa-music'
 ];
