@@ -29,7 +29,7 @@ const App: React.FC = () => {
       setTimeout(() => {
         loader.style.opacity = '0';
         setTimeout(() => loader.style.display = 'none', 500);
-      }, 1000);
+      }, 1500);
     }
 
     const token = localStorage.getItem('auth_token');
@@ -70,11 +70,11 @@ const App: React.FC = () => {
         try {
           const response = await ai.models.generateContent({
             model: 'gemini-3-flash-preview',
-            contents: `أنت مساعد دراسة ذكي ومحفز. قدم نصيحة دراسية واحدة قوية جداً وملهمة للطالب ${user?.fullName}. لديه ${subs.length} مواد و ${pendingTasks} مهام لم ينهها بعد. كن قصيراً وودوداً بالعربية.`,
+            contents: `أنت مساعد دراسة لطيف وودود. قدم نصيحة دراسية واحدة قصيرة جداً وملهمة للطالب ${user?.fullName}. لديه ${subs.length} مواد و ${pendingTasks} مهام متبقية. أجب بالعربية بلهجة تشجيعية.`,
           });
           if (response.text) setAiTip(response.text.trim());
         } catch (aiErr) {
-          setAiTip("كل دقيقة تقضيها في التعلم اليوم هي لبنة في بناء مستقبلك العظيم!");
+          setAiTip("كل خطوة صغيرة تقربك من حلمك الكبير.. استمر!");
         }
       }
     } catch (e) {
@@ -110,34 +110,33 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`fixed inset-0 flex flex-col w-full h-full overflow-hidden transition-colors duration-700 ${theme === 'dark' ? 'bg-[#0f172a] text-white' : 'bg-[#fcfdff] text-gray-900'}`}>
+    <div className={`fixed inset-0 flex flex-col w-full h-full overflow-hidden transition-colors duration-700 ${theme === 'dark' ? 'bg-[#0F172A] text-white' : 'bg-[#FAFBFF] text-gray-900'}`}>
+      
       {loading && (
-        <div className="absolute inset-0 z-[100] bg-white/20 dark:bg-black/20 backdrop-blur-xl flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin shadow-xl"></div>
+        <div className="absolute inset-0 z-[100] bg-white/20 backdrop-blur-xl flex items-center justify-center">
+          <div className="w-10 h-10 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
       {/* Modern Floating Header */}
-      <header className={`shrink-0 p-6 pt-12 pb-6 sticky top-0 z-40 safe-area-top`}>
-        <div className={`flex justify-between items-center p-4 rounded-[2rem] border backdrop-blur-xl transition-all duration-500 ${theme === 'dark' ? 'bg-slate-800/40 border-slate-700/50 shadow-2xl shadow-black/20' : 'bg-white/60 border-white/50 shadow-xl shadow-gray-200/50'}`}>
+      <header className="shrink-0 p-6 pt-12 pb-2 safe-area-top">
+        <div className={`flex justify-between items-center p-4 rounded-[2.2rem] border-2 transition-all duration-500 ${theme === 'dark' ? 'bg-slate-800/40 border-slate-700/50' : 'bg-white/70 border-white shadow-xl shadow-rose-100/20'}`}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-white shadow-lg">
-              <i className="fas fa-graduation-cap text-lg"></i>
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 to-rose-400 flex items-center justify-center text-white shadow-lg shadow-rose-200">
+              <i className="fas fa-crown text-sm"></i>
             </div>
             <div>
-              <h1 className="text-sm font-black tracking-tighter leading-none">{AR.appName}</h1>
-              <span className="text-[8px] font-black opacity-40 uppercase tracking-[0.2em]">{currentView} mode</span>
+              <h1 className="text-sm font-black text-gray-800 dark:text-white leading-none tracking-tighter">{AR.appName}</h1>
+              <span className="text-[7px] font-black text-rose-500 uppercase tracking-widest">Premium Mode</span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-             <button onClick={toggleTheme} className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${theme === 'dark' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-gray-100 text-gray-500'}`}>
-               <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-sm`}></i>
+             <button onClick={toggleTheme} className="w-9 h-9 rounded-xl bg-gray-50 dark:bg-slate-700 text-gray-400 flex items-center justify-center transition-all">
+               <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-xs`}></i>
              </button>
-             <div onClick={() => setCurrentView('profile')} className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 p-[2px] shadow-lg active:scale-90 transition-transform cursor-pointer">
-               <div className="w-full h-full rounded-[0.9rem] bg-white dark:bg-slate-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black text-xs">
-                 {user?.fullName?.charAt(0) || 'م'}
-               </div>
+             <div onClick={() => setCurrentView('profile')} className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center text-rose-500 font-black text-xs cursor-pointer active:scale-90">
+               {user?.fullName?.charAt(0) || 'م'}
              </div>
           </div>
         </div>

@@ -1,50 +1,81 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Study Planner</title>
+    <title>مخططي الذكي</title>
     
-    <!-- إعدادات لجعل الموقع يبدو كتطبيق حقيقي على iPhone -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Study Planner">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2997/2997300.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4344/4344844.png">
     
-    <!-- إعدادات لجعل الموقع يبدو كتطبيق حقيقي على Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#FF85A2">
     
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        position: fixed;
+        overscroll-behavior: none;
+        background-color: #FAFBFF;
+      }
+
       body {
         font-family: 'Cairo', sans-serif;
         -webkit-tap-highlight-color: transparent;
-        margin: 0;
-        padding: 0;
-        background-color: #f9fafb;
-        overflow-x: hidden;
         user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        color: #2D3436;
       }
+
       #root {
         height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .safe-area-top { padding-top: env(safe-area-inset-top, 0px); }
+      .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
+      
+      ::-webkit-scrollbar { width: 0px; background: transparent; }
+      
+      .no-scrollbar {
+        scrollbar-width: none;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
       }
-      .error-boundary {
-        padding: 20px;
-        text-align: center;
-        margin-top: 50px;
-        color: #ef4444;
+
+      .floating-anim {
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+      }
+
+      /* تحسين الأزرار */
+      button { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+      button:active { transform: scale(0.92); }
+
+      /* زوايا ناعمة جداً */
+      .rounded-premium { border-radius: 2.5rem; }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
       }
     </style>
     
-    <!-- تعريف عملية محاكاة لـ process لمنع أخطاء المتصفح -->
     <script>
       window.process = { env: { API_KEY: "" } };
     </script>
@@ -69,23 +100,18 @@
 }
 </script>
   </head>
-  <body class="bg-gray-50">
+  <body>
     <div id="root">
-      <!-- رسالة تظهر فقط إذا تأخر التحميل أو حدث خطأ -->
-      <div id="loading-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #2563eb; color: white;">
-        <i class="fas fa-graduation-cap fa-spin" style="font-size: 3rem; margin-bottom: 20px;"></i>
-        <h2 style="font-weight: 900;">جاري تحميل تطبيقك الدراسي...</h2>
+      <div id="loading-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #FFFFFF; color: #2D3436; text-align: center; padding: 20px; z-index: 9999; position: fixed; inset: 0;">
+        <div class="floating-anim" style="background: linear-gradient(135deg, #FF85A2, #7C4DFF); padding: 40px; border-radius: 50px; box-shadow: 0 30px 60px rgba(255, 133, 162, 0.3); margin-bottom: 30px;">
+          <i class="fas fa-crown" style="font-size: 5rem; color: white;"></i>
+        </div>
+        <h1 style="font-weight: 900; font-size: 2.5rem; color: #1A1A1A; margin-bottom: 5px;">مخططي الذكي</h1>
+        <p style="color: #A0A0A0; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;">BE READY TO SHINE ✨</p>
       </div>
     </div>
-    
-    <!-- هذا هو السطر المفقود الذي يربط الكود بالصفحة -->
-    <script type="module" src="/index.tsx"></script>
-
-    <script>
-      // إخفاء شاشة التحميل إذا فشل السكريبت في العمل خلال 10 ثواني
-      window.onerror = function(msg, url, line) {
-        document.getElementById('root').innerHTML = '<div class="error-boundary"><h3>حدث خطأ في التحميل</h3><p>' + msg + '</p><button onclick="location.reload()" style="background:#2563eb; color:white; padding:10px 20px; border-radius:10px; margin-top:10px;">إعادة محاولة</button></div>';
-      };
+    <script type="module">
+      import "/index.tsx";
     </script>
   </body>
 </html>

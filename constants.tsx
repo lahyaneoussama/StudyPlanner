@@ -1,60 +1,60 @@
 export const AR = {
-  appName: 'مخطط الدراسة',
+  appName: 'مخططي الذكي',
   home: 'الرئيسية',
   subjects: 'المواد',
   tasks: 'المهام',
   schedule: 'الجدول',
   stats: 'الإحصائيات',
-  profile: 'الملف الشخصي',
-  addSubject: 'إضافة مادة',
+  profile: 'بروفيلي',
+  addSubject: 'مادة جديدة',
   editSubject: 'تعديل المادة',
-  addTask: 'إضافة مهمة',
+  addTask: 'مهمة جديدة',
   editTask: 'تعديل المهمة',
-  addSession: 'إضافة جلسة',
+  addSession: 'جلسة دراسة',
   editSession: 'تعديل الجلسة',
-  completed: 'مكتمل',
-  pending: 'قيد الانتظار',
-  studyHours: 'ساعات الدراسة',
-  studyGoal: 'هدف الدراسة اليومي',
-  streak: 'سلسلة الأيام',
-  todaySessions: 'جلسات اليوم',
-  upcomingTasks: 'المهام القادمة',
+  completed: 'تم الإنجاز',
+  pending: 'قيد العمل',
+  studyHours: 'ساعاتك',
+  studyGoal: 'هدفك اليومي',
+  streak: 'أيام التألق',
+  todaySessions: 'جدول اليوم',
+  upcomingTasks: 'مهام قادمة',
   edit: 'تعديل',
   delete: 'حذف',
-  save: 'حفظ التغييرات',
-  cancel: 'إلغاء',
-  login: 'تسجيل الدخول',
-  register: 'إنشاء حساب',
-  logout: 'تسجيل الخروج',
-  educationLevel: 'المستوى الدراسي',
-  email: 'البريد الإلكتروني',
-  password: 'كلمة المرور',
+  save: 'تأكيد الحفظ',
+  cancel: 'تراجع',
+  login: 'دخول',
+  register: 'انضمام',
+  logout: 'خروج',
+  educationLevel: 'المستوى',
+  email: 'البريد',
+  password: 'كلمة السر',
   fullName: 'الاسم الكامل',
-  noTasks: 'لا توجد مهام حالياً',
-  noSessions: 'لا توجد جلسات مجدولة اليوم',
-  points: 'نقاط',
-  totalProgress: 'التقدم الإجمالي',
+  noTasks: 'لا توجد مهام',
+  noSessions: 'يومك هادئ اليوم',
+  points: 'نقطة',
+  totalProgress: 'الإنجاز العام',
   darkMode: 'الوضع الليلي',
   lightMode: 'الوضع النهاري',
-  editProfile: 'تعديل الملف الشخصي',
-  updateInfo: 'تحديث المعلومات',
+  editProfile: 'تعديل الملف',
+  updateInfo: 'تحديث',
   university: 'جامعي',
   highSchool: 'ثانوي',
   middleSchool: 'متوسط',
   primarySchool: 'ابتدائي',
 };
 
-// ألوان عصرية (Vibrant & Deep)
+// ألوان مبهجة وجذابة (Pastel & Bright)
 export const SUBJECT_COLORS = [
-  '#6366f1', // Indigo
-  '#ec4899', // Pink
-  '#14b8a6', // Teal
-  '#f59e0b', // Amber
-  '#8b5cf6', // Violet
-  '#ef4444', // Red
-  '#3b82f6'  // Blue
+  '#FF85A2', // Rose Pastel
+  '#7C4DFF', // Deep Violet
+  '#00D2FF', // Sky Blue
+  '#FFB74D', // Soft Orange
+  '#69F0AE', // Mint Green
+  '#FF5252', // Candy Red
+  '#448AFF'  // Royal Blue
 ];
 
 export const ICONS = [
-  'fa-book-bookmark', 'fa-calculator', 'fa-microscope', 'fa-earth-africa', 'fa-code', 'fa-palette', 'fa-music'
+  'fa-star', 'fa-pencil-ruler', 'fa-brain', 'fa-flask-vial', 'fa-laptop-code', 'fa-palette', 'fa-language'
 ];
